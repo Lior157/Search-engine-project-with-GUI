@@ -6,10 +6,12 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.DirectoryChooser;
+import javafx.util.Pair;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.util.ArrayList;
 
 
 public class DictionaryWindow {
@@ -20,7 +22,7 @@ public class DictionaryWindow {
     public void initialize(){ }
 
 
-    public void insertData(String path){
+    public void insertData(ArrayList<Pair<String,String>> dictionary){
 
         TableColumn<String, DictionaryViewObject> column1 = new TableColumn<>("Term");
         column1.setCellValueFactory(new PropertyValueFactory<>("Term"));
@@ -31,22 +33,9 @@ public class DictionaryWindow {
 
         table.getColumns().add(column1);
         table.getColumns().add(column2);
-        try
-        {
-            BufferedReader reader = new BufferedReader(new FileReader(path+"/dictionaryAllCorpus.txt"));
-            String line;
-            while ((line = reader.readLine()) != null)
-            {
-                String[] divide=line.split("=");
-                table.getItems().add(new DictionaryViewObject(divide[0],divide[1]));
-            }
-            reader.close();
-        }
-        catch (Exception e)
-        {
-            System.err.format("Exception occurred trying to read the dictionary");
-            e.printStackTrace();
-        }
+        for (int i = 0; i <dictionary.size() ; i++)
+            table.getItems().add(new DictionaryViewObject(dictionary.get(i).getKey(),dictionary.get(i).getValue()));
+
     }
 
 

@@ -1,5 +1,6 @@
 package sample;
 
+import com.sun.xml.internal.ws.message.ByteArrayAttachment;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -12,9 +13,13 @@ import javafx.scene.control.TextField;
 import javafx.stage.DirectoryChooser;
 import javafx.event.ActionEvent;
 import javafx.stage.Stage;
+import javafx.util.Pair;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class Controller {
     @FXML
@@ -37,6 +42,11 @@ public class Controller {
     @FXML
     CheckBox stem;
 
+    ArrayList<Pair<String,String>> dictionary;
+    ArrayList<Pair<String,String>> dictionaryStem;
+    boolean stemLoaded;
+    boolean withoutStemLoaded;
+
     DirectoryChooser directoryChooser;
     boolean firstTime;
 
@@ -44,6 +54,9 @@ public class Controller {
         this.directoryChooser = new DirectoryChooser();
         configuringDirectoryChooser(directoryChooser);
         firstTime=true;
+        dictionary=new ArrayList<>();
+        stemLoaded=false;
+        withoutStemLoaded=false;
     }
 
     public void getCorpusPath(ActionEvent event) {
@@ -66,8 +79,8 @@ public class Controller {
 
     public void resetDictionary(ActionEvent event) {
         String path = dictionaryPath.getText();
-        File dictionary = new File(path+"/dictionaryAllCorpus.txt");
-        if(corpusPath.getText().equals("")||path.equals("")||!dictionary.exists()) {
+        File dictionary = new File(path+"/withoutStem AllDictionary.txt");
+        if(!corpusPath.getText().equals("")&&!path.equals("")&&dictionary.exists()) {
             File folder = new File(path);
             File[] files = folder.listFiles();
             for (int i = 0; i < files.length; i++)
@@ -78,7 +91,49 @@ public class Controller {
     }
 
 
+    public void loadDictionary(ActionEvent event){
+        File dictionary;
+        if(stem.isSelected())
+            dictionary = new File(dictionaryPath.getText()+"/withStem AllDictionary.txt");
+        else
+            dictionary = new File(dictionaryPath.getText()+"/withoutStem AllDictionary.txt");
+        if(corpusPath.getText().equals("")||dictionaryPath.getText().equals("")||!dictionary.exists()) {
+            openError();
+            return;
+        }
+        try
+        {
+            BufferedReader reader;
+            if(stem.isSelected()) {
+                reader = new BufferedReader(new FileReader(dictionaryPath.getText() + "/withStem AllDictionary.txt"));
+                stemLoaded=true;
+                withoutStemLoaded=false;
+            }
+            else {
+                reader = new BufferedReader(new FileReader(dictionaryPath.getText() + "/withoutStem AllDictionary.txt"));
+                stemLoaded=false;
+                withoutStemLoaded=true;
+            }
+            String line;
+            while ((line = reader.readLine()) != null)
+            {
+                String[] divide=line.split("=");
+                this.dictionary.add(new Pair<>(divide[0],divide[1]));
+            }
+            reader.close();
+        }
+        catch (Exception e)
+        {
+            System.err.format("Exception occurred trying to read the dictionary");
+            e.printStackTrace();
+        }
+    }
+
         public void openDictionary(ActionEvent event) {
+        if(!stemLoaded && !withoutStemLoaded) {
+            openError();
+            return;
+        }
             String path=dictionaryPath.getText();
             File dictionary;
             if(stem.isSelected())
@@ -87,6 +142,7 @@ public class Controller {
                 dictionary = new File(path+"/withoutStem AllDictionary.txt");
             if(corpusPath.getText().equals("")||dictionaryPath.getText().equals("")||!dictionary.exists()) {
                 openError();
+                return;
             }
             else {
                 Parent root;
@@ -95,10 +151,10 @@ public class Controller {
                     root =loader.load();
                     Scene scene=new Scene(root, 450, 450);
                     Stage stage = new Stage();
-                    stage.setTitle("My New Stage Title");
+                    stage.setTitle("Dictionary");
                     stage.setScene(scene);
                     DictionaryWindow controller=loader.getController();
-                    controller.insertData(path);
+                    controller.insertData(this.dictionary);
                     stage.show();
                 } catch (IOException e) {
                     e.printStackTrace();

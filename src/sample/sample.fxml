@@ -19,9 +19,10 @@
       </HBox>
       <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
          <children>
-            <CheckBox mnemonicParsing="false" text="Stemming" fx:id="stem" />
-            <Button mnemonicParsing="false" text="Reset Dictionary" fx:id="reset" onAction="#resetDictionary"/>
-            <Button mnemonicParsing="false" text="Display Dictionary" fx:id="OpenDictionary" onAction="#openDictionary" />
+            <CheckBox fx:id="stem" mnemonicParsing="false" text="Stemming" />
+            <Button fx:id="reset" mnemonicParsing="false" onAction="#resetDictionary" text="Reset Dictionary" />
+            <Button fx:id="OpenDictionary" mnemonicParsing="false" onAction="#openDictionary" text="Display Dictionary" />
+            <Button mnemonicParsing="false" text="Load Dictionary" onAction="#loadDictionary"/>
             <Button mnemonicParsing="false" text="Create Dictionary" />
          </children>
       </HBox>
