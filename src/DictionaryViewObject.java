@@ -1,5 +1,3 @@
-package sample;
-
 public class DictionaryViewObject {
 
     private String Term;
