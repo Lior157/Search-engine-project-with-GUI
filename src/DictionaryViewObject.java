@@ -1,3 +1,6 @@
+/**
+ * This class is used to add objects to load the dictionary
+ */
 public class DictionaryViewObject {
 
     private String Term;

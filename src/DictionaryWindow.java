@@ -16,6 +16,10 @@ public class DictionaryWindow {
     public void initialize(){ }
 
 
+    /**
+     * @param dictionary a list that contains the dictionary
+     * This function reads the dictionary and adds his contents to the new window
+     */
     public void insertData(ArrayList<Pair<String,String>> dictionary){
 
         TableColumn<String, DictionaryViewObject> column1 = new TableColumn<>("Term");
