@@ -94,7 +94,7 @@ public class Controller {
             return;
         }
         new File(dictPath).mkdir(); //creates the dictionary directory
-        pb.startBuildingStock(Paths.get(dictPath),Paths.get(corpusPath.getText()));  //creates the dictionary and the posting files
+        String [] something=pb.startBuildingStock(Paths.get(dictPath),Paths.get(corpusPath.getText()));  //creates the dictionary and the posting files
         openInformation("Dictionary created successfully!");
     }
 
