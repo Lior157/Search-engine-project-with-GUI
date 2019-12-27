@@ -142,6 +142,21 @@ public class Controller {
         }
     }
 
+    public void openQuerySearch(ActionEvent event){
+        Parent root;
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("QuerySearch.fxml"));
+            root =loader.load();
+            Scene scene=new Scene(root, 450, 450);
+            Stage stage = new Stage();
+            stage.setTitle("Queries");
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     /**
      * @param event

@@ -22,8 +22,13 @@
             <CheckBox fx:id="stem" mnemonicParsing="false" text="Stemming" />
             <Button fx:id="reset" mnemonicParsing="false" onAction="#resetDictionary" text="Reset Dictionary" />
             <Button fx:id="OpenDictionary" mnemonicParsing="false" onAction="#openDictionary" text="Display Dictionary" />
-            <Button mnemonicParsing="false" text="Load Dictionary" onAction="#loadDictionary"/>
-            <Button mnemonicParsing="false" text="Create Dictionary" onAction="#createDictionary" />
+            <Button mnemonicParsing="false" onAction="#loadDictionary" text="Load Dictionary" />
+            <Button mnemonicParsing="false" onAction="#createDictionary" text="Create Dictionary" />
+         </children>
+      </HBox>
+      <HBox alignment="TOP_CENTER" prefHeight="54.0" prefWidth="600.0">
+         <children>
+            <Button mnemonicParsing="false" text="Search Queries" onAction="#openQuerySearch" />
          </children>
       </HBox>
    </children>
