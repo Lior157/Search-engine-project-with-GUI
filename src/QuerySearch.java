@@ -64,6 +64,10 @@ public class QuerySearch {
 
     public void browseQueryFile(ActionEvent event){
         boolean save=false;
+        if(semantics.isSelected())
+            searcher.turnOnSemantics();
+        else
+            searcher.turnOffSemantics();
         ArrayList<ArrayList<Map.Entry<String,Double>>> allDocs=new ArrayList<>();
         ArrayList<String> q=new ArrayList<>();
         File file=chooser.showOpenDialog(query.getScene().getWindow());
