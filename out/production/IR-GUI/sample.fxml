@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" spacing="20.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller">
+   <children>
+      <HBox alignment="CENTER" spacing="10.0">
+         <children>
+            <TextField fx:id="corpusPath" prefHeight="25.0" prefWidth="320.0" promptText="Corpus path" />
+            <Button fx:id="corpusButton" mnemonicParsing="false" onAction="#getCorpusPath" text="Browse" />
+         </children>
+      </HBox>
+      <HBox alignment="CENTER" spacing="10.0">
+         <children>
+            <TextField fx:id="dictionaryPath" prefHeight="25.0" prefWidth="320.0" promptText="Posting files path" />
+            <Button fx:id="dictionaryButton" mnemonicParsing="false" onAction="#getDictionaryPath" text="Browse" />
+         </children>
+      </HBox>
+      <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+         <children>
+            <CheckBox fx:id="stem" mnemonicParsing="false" text="Stemming" />
+            <Button fx:id="reset" mnemonicParsing="false" onAction="#resetDictionary" text="Reset Dictionary" />
+            <Button fx:id="OpenDictionary" mnemonicParsing="false" onAction="#openDictionary" text="Display Dictionary" />
+            <Button mnemonicParsing="false" onAction="#loadDictionary" text="Load Dictionary" />
+            <Button mnemonicParsing="false" onAction="#createDictionary" text="Create Dictionary" />
+         </children>
+      </HBox>
+      <HBox alignment="TOP_CENTER" prefHeight="54.0" prefWidth="600.0">
+         <children>
+            <Button mnemonicParsing="false" text="Search Queries" onAction="#openQuerySearch" />
+         </children>
+      </HBox>
+   </children>
+</VBox>

@@ -144,20 +144,7 @@ public class Controller {
         }
     }
 
-    public void openQuerySearch(ActionEvent event){
-        Parent root;
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("QuerySearch.fxml"));
-            root =loader.load();
-            Scene scene=new Scene(root, 450, 450);
-            Stage stage = new Stage();
-            stage.setTitle("Queries");
-            stage.setScene(scene);
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+
 
 
     /**
@@ -214,6 +201,29 @@ public class Controller {
         }
         else
             openError("You didnt enter the dictionary path or the dictionary wasnt created.");
+    }
+
+
+    public void openQuerySearch(ActionEvent event){
+        if(dictionaryPath.getText().equals("")){
+            openError("You didnt enter the Posting files path.");
+            return;
+        }
+
+        Parent root;
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("QuerySearch.fxml"));
+            root =loader.load();
+            Scene scene=new Scene(root, 450, 450);
+            Stage stage = new Stage();
+            stage.setTitle("Queries");
+            stage.setScene(scene);
+            QuerySearch controller=loader.getController();
+            controller.insertData(dictionaryPath.getText());
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 
