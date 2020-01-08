@@ -9,6 +9,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import javafx.util.Pair;
@@ -44,6 +45,7 @@ public class DocumentsWindow {
     public void insertData(ArrayList<Map.Entry<String,Double>> docs,Searcher searcher){
 
         this.searcher=searcher;
+
 
         TableColumn<String, DictionaryViewObject> column1 = new TableColumn<>("Number");
         column1.setCellValueFactory(new PropertyValueFactory<>("Number"));

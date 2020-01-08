@@ -1,22 +1,22 @@
 
+import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Optional;
 
 public class QuerySearch {
     String posting;
@@ -28,7 +28,15 @@ public class QuerySearch {
     @FXML
     CheckBox semantics;
 
-    public void initialize(){ } //initializes all the variables
+
+    FileChooser chooser;
+
+    DirectoryChooser directoryChooser;
+
+    public void initialize(){    //initializes all the variables
+        chooser=new FileChooser();
+        directoryChooser=new DirectoryChooser();
+    }
 
 
     public void insertData(String posting){
@@ -36,24 +44,106 @@ public class QuerySearch {
         searcher=new Searcher(Paths.get(posting+"/dictionary/withoutStemPostingFiles"),Paths.get("resources"));
     }
 
-    public void runQuery(ActionEvent event){
-        if(query.getText().equals("")) {
+    public void runQuery(ActionEvent event) {
+        if (query.getText().equals("")) {
             openError("You didnt enter any query!");
             return;
         }
         try {
-            if(semantics.isSelected())
+            if (semantics.isSelected())
                 searcher.turnOnSemantics();
             else
                 searcher.turnOffSemantics();
-            ArrayList<Map.Entry<String,Double>> docs=searcher.analyzeQuery(query.getText());
+            ArrayList<Map.Entry<String, Double>> docs = searcher.analyzeQuery(query.getText());
+            openDocumentsWindow(docs,query.getText());
+        }
+        catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    public void browseQueryFile(ActionEvent event){
+        boolean save=false;
+        ArrayList<ArrayList<Map.Entry<String,Double>>> allDocs=new ArrayList<>();
+        ArrayList<String> q=new ArrayList<>();
+        File file=chooser.showOpenDialog(query.getScene().getWindow());
+        File dir=null;
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Save to file");
+        alert.setHeaderText("Do you want to save the results into a file?");
+        alert.setContentText("Choose your option.");
+
+        ButtonType buttonTypeOne = new ButtonType("Yes");
+        ButtonType buttonTypeTwo = new ButtonType("No");
+
+        alert.getButtonTypes().setAll(buttonTypeOne, buttonTypeTwo);
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == buttonTypeOne){
+            dir = directoryChooser.showDialog(query.getScene().getWindow());
+            save=true;
+        } else if (result.get() == buttonTypeTwo) {
+            save=false;
+        }
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(file));
+            boolean newDoc=false;
+            String st,num="",query="";
+            while ((st = br.readLine()) != null) {
+                if(st.contains("</top>")){
+                    ArrayList<Map.Entry<String,Double>> temp=searcher.analyzeQuery(query);
+                    allDocs.add(temp);
+                    q.add(query);
+                    if(save){
+                        saveResults(temp,num,dir);
+                    }
+                }
+                else if(st.contains("<num>"))
+                    num=st.substring(14,17);
+                else if(st.contains("<title>")){
+                    query=st.substring(8);
+                    while(query.endsWith(" "))
+                        query=query.substring(0,query.length()-1);
+                }
+
+            }
+        }
+        catch (IOException e){
+            e.printStackTrace();
+        }
+        if(save)
+            openInformation("File saved!");
+        for (int i = 0; i <allDocs.size() ; i++) {
+            openDocumentsWindow(allDocs.get(i),q.get(i));
+        }
+    }
+
+    public void saveResults(ArrayList<Map.Entry<String,Double>> docList,String num,File dir) throws IOException
+    {
+        if(dir!=null){
+            try(FileWriter fw = new FileWriter(dir.getAbsolutePath()+"/Qres.txt", true);
+                BufferedWriter bw = new BufferedWriter(fw);
+                PrintWriter out = new PrintWriter(bw))
+            {
+                for (Map.Entry<String,Double> entry:docList) {
+                    String line=num+" 0 "+entry.getKey()+" 1 42.38 mt";
+                    out.println(line);
+                }
+            } catch (IOException e) {
+                //exception handling left as an exercise for the reader
+            }
+        }
+    }
+
+
+    public void openDocumentsWindow(ArrayList<Map.Entry<String,Double>> docs,String query){
             Parent root;
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("DocumentsWindow.fxml"));
                 root =loader.load();
                 Scene scene=new Scene(root, 450, 450);
                 Stage stage = new Stage();
-                stage.setTitle("Documents");
+                stage.setTitle(query);
                 stage.setScene(scene);
                 DocumentsWindow controller=loader.getController();
                 controller.insertData(docs,searcher);
@@ -61,12 +151,6 @@ public class QuerySearch {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
-        catch(IOException e){
-            e.printStackTrace();
-        }
-
-
     }
 
 

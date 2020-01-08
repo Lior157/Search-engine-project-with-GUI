@@ -9,7 +9,7 @@
          <children>
             <TextField prefHeight="25.0" prefWidth="329.0" promptText="Insert Query Here" fx:id="query" />
             <Button onAction="#runQuery" mnemonicParsing="false" text="RUN" />
-            <Button mnemonicParsing="false" text="Browse" />
+            <Button mnemonicParsing="false" text="Browse" onAction="#browseQueryFile" />
          </children>
       </HBox>
       <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0">
