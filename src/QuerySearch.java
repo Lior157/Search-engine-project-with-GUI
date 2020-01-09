@@ -54,7 +54,7 @@ public class QuerySearch {
                 searcher.turnOnSemantics();
             else
                 searcher.turnOffSemantics();
-            ArrayList<Map.Entry<String, Double>> docs = searcher.analyzeQuery(query.getText());
+            ArrayList<Map.Entry<String, Double>> docs = searcher.analyzeQuery(query.getText(),1.2,0.4);
             openDocumentsWindow(docs,query.getText());
         }
         catch (IOException e){
@@ -62,6 +62,10 @@ public class QuerySearch {
         }
     }
 
+    /**
+     * This function reads from the query file and then open the results in new windows
+     * @param event
+     */
     public void browseQueryFile(ActionEvent event){
         boolean save=false;
         if(semantics.isSelected())
@@ -95,11 +99,15 @@ public class QuerySearch {
             String st,num="",query="";
             while ((st = br.readLine()) != null) {
                 if(st.contains("</top>")){
-                    ArrayList<Map.Entry<String,Double>> temp=searcher.analyzeQuery(query);
+                    Searcher.setMinimum(4.7);
+                    ArrayList<Map.Entry<String,Double>> temp=searcher.analyzeQuery(query,1.2,0.4);
                     allDocs.add(temp);
                     q.add(query);
+                    Map<String,Double> docsBeforeSort=searcher.getDocsBeforeSort();
+                    ArrayList<Map.Entry<String,Double>> docsBeforeSortList=new ArrayList<>();
+                    docsBeforeSortList.addAll(docsBeforeSort.entrySet());
                     if(save){
-                        saveResults(temp,num,dir);
+                        saveResults(docsBeforeSortList,num,dir);
                     }
                 }
                 else if(st.contains("<num>"))
