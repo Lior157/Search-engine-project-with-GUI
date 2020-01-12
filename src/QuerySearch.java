@@ -99,15 +99,12 @@ public class QuerySearch {
             String st,num="",query="";
             while ((st = br.readLine()) != null) {
                 if(st.contains("</top>")){
-                    Searcher.setMinimum(4.7);
-                    ArrayList<Map.Entry<String,Double>> temp=searcher.analyzeQuery(query,1.2,0.4);
+                    Searcher.setMinimum(5.0);
+                    ArrayList<Map.Entry<String,Double>> temp=searcher.analyzeQuery(query,0.9,0.75);
                     allDocs.add(temp);
                     q.add(query);
-                    Map<String,Double> docsBeforeSort=searcher.getDocsBeforeSort();
-                    ArrayList<Map.Entry<String,Double>> docsBeforeSortList=new ArrayList<>();
-                    docsBeforeSortList.addAll(docsBeforeSort.entrySet());
                     if(save){
-                        saveResults(docsBeforeSortList,num,dir);
+                        saveResults(temp,num,dir);
                     }
                 }
                 else if(st.contains("<num>"))
@@ -116,6 +113,10 @@ public class QuerySearch {
                     query=st.substring(8);
                     while(query.endsWith(" "))
                         query=query.substring(0,query.length()-1);
+                }
+                else if(st.contains("<desc>")){
+                    while(!(st=br.readLine()).contains("<narr>"))
+                        query=query+" "+st;
                 }
 
             }
