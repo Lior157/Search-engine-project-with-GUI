@@ -54,7 +54,7 @@ public class QuerySearch {
                 searcher.turnOnSemantics();
             else
                 searcher.turnOffSemantics();
-            ArrayList<Map.Entry<String, Double>> docs = searcher.analyzeQuery(query.getText(),1.2,0.4);
+            ArrayList<Map.Entry<String, Double>> docs = searcher.analyzeQuery(query.getText(),1.4,0.77,1.3);
             openDocumentsWindow(docs,query.getText());
         }
         catch (IOException e){
@@ -95,12 +95,14 @@ public class QuerySearch {
         }
         try {
             BufferedReader br = new BufferedReader(new FileReader(file));
-            boolean newDoc=false;
+
             String st,num="",query="";
             while ((st = br.readLine()) != null) {
+
+
                 if(st.contains("</top>")){
-                    Searcher.setMinimum(5.0);
-                    ArrayList<Map.Entry<String,Double>> temp=searcher.analyzeQuery(query,0.9,0.75);
+                    searcher.turnOffStem();
+                    ArrayList<Map.Entry<String,Double>> temp=searcher.analyzeQuery(query,1.4,0.77,1.3);
                     allDocs.add(temp);
                     q.add(query);
                     if(save){
@@ -116,8 +118,9 @@ public class QuerySearch {
                 }
                 else if(st.contains("<desc>")){
                     while(!(st=br.readLine()).contains("<narr>"))
-                        query=query+" "+st;
+                        query = query + " " + st;
                 }
+
 
             }
         }
